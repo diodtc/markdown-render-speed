@@ -1,6 +1,6 @@
 // Grammar: block (GFM) and inline (GFM) rules and shared helpers, extracted
 
-// programmatically from marked 18.1.3's published grammar (MIT; see LICENCE).
+// programmatically from marked 18.1.3's published grammar (MIT; see THIRD-PARTY-NOTICES.md).
 
 // The lexer, parser and renderer around them are original work.
 

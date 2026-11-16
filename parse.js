@@ -3,7 +3,7 @@
 // byte for byte. Dependency-free ES module.
 //
 // The grammar regular expressions come from marked 18.1.3's published grammar
-// (MIT; see LICENCE). The lexer, parser and renderer around them are original
+// (MIT; see THIRD-PARTY-NOTICES.md). The lexer, parser and renderer around them are original
 // work, written for speed: sticky regexes over one cursor (no per-token
 // substrings), module-level precompiled patterns, and no per-call class
 // instantiation.
