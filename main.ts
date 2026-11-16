@@ -1,29 +1,19 @@
 // Driver for the markdown-render-speed entry. The harness runs
-// `node /bot/main.ts` under Node 22. It reads every case from
-// <input>/cases.json (a JSON array of {id, markdown}), renders each case
-// alone through parse() from ./parse.js, and writes <output>/html.json:
-// a JSON array of the HTML strings, one per case, in case order.
-// MAKEFUN_INPUT_DIR / MAKEFUN_OUTPUT_DIR stand in for /input and /output
-// when the driver runs outside the grading container.
+// `node /bot/main.ts` with the cases at $MAKEFUN_INPUT_DIR/cases.json
+// (default /input) and expects the rendered HTML strings at
+// $MAKEFUN_OUTPUT_DIR/html.json (default /output), one per case, in order.
+// Each case is rendered on its own, so no state leaks between cases.
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from './parse.js';
 
 const inputDir = process.env.MAKEFUN_INPUT_DIR ?? '/input';
 const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-function loadCases(path: string): { id: string; markdown: string }[] {
-  return JSON.parse(readFileSync(path, 'utf8'));
-}
+interface Case { id: string; markdown: string }
 
-function renderAll(cases: { id: string; markdown: string }[]): string[] {
-  const out: string[] = new Array(cases.length);
-  for (let i = 0; i < cases.length; i++) out[i] = parse(cases[i].markdown);
-  return out;
-}
-
-const cases = loadCases(join(inputDir, 'cases.json'));
-const html = renderAll(cases);
+const cases: Case[] = JSON.parse(readFileSync(join(inputDir, 'cases.json'), 'utf8'));
+const html = cases.map((c) => parse(c.markdown));
 mkdirSync(outputDir, { recursive: true });
 writeFileSync(join(outputDir, 'html.json'), JSON.stringify(html));
